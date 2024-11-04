@@ -7,7 +7,7 @@ if __name__ == "__main__":
     ds = datasets.load_dataset("PatronusAI/financebench", split="train")
 
     for x in tqdm(ds):
-        outp = Path("data", "financebench", x["financebench_id"] + ".pdf")
+        outp = Path("data", "financebench", x["doc_name"] + ".pdf")
         if not outp.is_file():
             try:
                 r = requests.get(x["doc_link"])

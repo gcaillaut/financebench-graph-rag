@@ -47,7 +47,7 @@ if __name__ == "__main__":
         for x in batch:
             collection.add(
                 documents=x["chunks"],
-                metadatas=[{"path": str(x["path"])}] * len(x["chunks"]),
+                metadatas=[{"path": str(x["path"]), "document": x["document"]}] * len(x["chunks"]),
                 ids=[
                     f"{x['document']}-{chunkid}"
                     for chunkid in range(len(x["chunks"]))

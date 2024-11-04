@@ -54,12 +54,11 @@ def create_rag_workflow(config):
     def _make_prompt(query):
         passages = [
             x["content"]
-            for x in text_vector_store.search(query["question"], where={"path": {"$eq": str(query["path"])}})
+            for x in text_vector_store.search(query["question"], where={"document": {"$eq": query["document"]}})
         ]
         
         return {
             "question": query["question"],
-            # "question": f"{query['question']}\n\nTo answer this question, first describe you reasoning process betwen <reasoning></reasoning> XML tags. Then, provide your definitive answer between <answer></answer> tags. The definitive answer should be short and clear.",
             "history": get_base_history(passages),
             "chunks": passages,
         }
@@ -68,8 +67,6 @@ def create_rag_workflow(config):
         raw_answer = llm(data["question"], data["history"])
         return {
             "prediction": raw_answer,
-            # "prediction": extract_xml_tag(raw_answer, "answer"),
-            # "llm_explanation": extract_xml_tag(raw_answer, "reasoning"),
             "chunks": data["chunks"],
         }
 
@@ -104,32 +101,30 @@ if __name__ == "__main__":
 
     ds = datasets.load_dataset("PatronusAI/financebench", split="train")
 
-    docid = ds["financebench_id"]
+    docnames = ds["doc_name"]
     questions = ds["question"]
     answers = ds["answer"]
     justifications = ds["justification"]
 
     results = []
-    for id, q, a, j in tqdm(
-        zip(docid, questions, answers, justifications), total=len(ds)
+    for dn, q, a, j in tqdm(
+        zip(docnames, questions, answers, justifications), total=len(ds)
     ):
-        pdf_path = Path("data", "financebench", f"{id}.pdf")
+        pdf_path = Path("data", "financebench", f"{dn}.pdf")
         if pdf_path.is_file():
 
             out = rag_workflow.run(
-                {"question": q, "path": Path("data", "financebench", f"{id}.pdf")}
+                {"question": q, "document": dn}
             )
             results.append(
                 {
                     "question": q,
                     "expected": a,
                     "predicted": out["prediction"],
-                    # "llm_justification": out["llm_explanation"],
                     "justification": j,
                     "chunks": out["chunks"],
                 }
             )
-        break
 
     with open(output_path, "wt", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=4)
