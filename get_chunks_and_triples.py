@@ -35,16 +35,16 @@ OPTIONAL MATCH (c:Chunk)-[:HAS_ENTITY]->(e)-[r]->(v:!Chunk)
 RETURN c.text, collect(e.id), collect(type(r)), collect(v.id);"""
         res = query_database(driver, q)
 
-        item = [
-            {
-                "document": docname,
-                "text": x[0],
-                "triples": list(zip(x[1], x[2], x[3])),
-            }
-            for x in res[1:]
-        ]
-        if len(item) > 0:
-            chunks_and_triples.append(item)
+        chunks_and_triples.extend(
+            [
+                {
+                    "document": docname,
+                    "text": x[0],
+                    "triples": list(zip(x[1], x[2], x[3])),
+                }
+                for x in res[1:]
+            ]
+        )
 
     output_path = Path("data", "financebench_neo4j.json")
     output_path.parent.mkdir(exist_ok=True, parents=True)
