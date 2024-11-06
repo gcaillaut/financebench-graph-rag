@@ -1,0 +1,14 @@
+{
+    "faithfulness": 0.6748320653,
+    "answer_relevancy": 0.4858477483,
+    "context_recall": 0.2541666667,
+    "semantic_similarity": 0.8069432711,
+    "context_entity_recall": 0.0647294085,
+    "factual_correctness": 0.1622689076,
+    "context_precision": 0.2316239316,
+    "rouge_score": 0.1032856026,
+    "total_output_token": 352978.0,
+    "total_input_token": 3612802.0,
+    "experiment": "eval_with_model_mistral-large-2407_financebench_text_results_llama3.1-8B.json",
+    "eval_model": "mistral-large-2407"
+}

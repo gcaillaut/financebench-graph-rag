@@ -13,7 +13,12 @@ class TextModel(Node):
         super().__init__(name)
         self.max_new_tokens = max_new_tokens
         self.batch_size = batch_size
-        self.model = AutoModelForCausalLM.from_pretrained(model_name, attn_implementation = "sdpa", torch_dtype=torch.bfloat16, device_map="auto")
+        self.model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            attn_implementation = "sdpa",
+            torch_dtype="auto",
+            device_map="auto",
+        )
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left")
         
         if self.tokenizer.pad_token is None:
@@ -39,14 +44,14 @@ class TextModel(Node):
         inputs = self._tokenize(batch)
 
         input_length = inputs["input_ids"].size(-1)
-        with torch.inference_mode(), torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+        with torch.inference_mode(), torch.autocast(device_type="cuda"):
             outputs = self.model.generate(**inputs, max_new_tokens=self.max_new_tokens, **kwargs)
         return self.tokenizer.batch_decode(outputs[:, input_length:], skip_special_tokens=True)
     
     def _tokenize(self, texts):
         inputs = self.tokenizer(texts, return_tensors="pt", padding=True, truncation=True)
         for k, v in inputs.items():
-            inputs[k] = v.to(self.model.device)
+            inputs[k] = v.cuda()
         return inputs
 
     def get_tokenizer(self):

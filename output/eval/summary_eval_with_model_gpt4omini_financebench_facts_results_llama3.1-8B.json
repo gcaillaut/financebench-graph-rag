@@ -1,0 +1,14 @@
+{
+    "faithfulness": 0.6435546911,
+    "answer_relevancy": 0.2852344911,
+    "context_recall": 0.0982142857,
+    "semantic_similarity": 0.8044977594,
+    "context_entity_recall": 0.0740178699,
+    "factual_correctness": 0.3192857143,
+    "context_precision": 0.0,
+    "rouge_score": 0.0898066683,
+    "total_output_token": 382807.0,
+    "total_input_token": 3492528.0,
+    "experiment": "eval_with_model_gpt4omini_financebench_facts_results_llama3.1-8B.json",
+    "eval_model": "gpt4omini"
+}

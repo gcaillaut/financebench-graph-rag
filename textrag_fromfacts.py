@@ -74,7 +74,8 @@ if __name__ == "__main__":
     # output_path = "financebench_facts_results_llama3.1-8B.json"
     
     model_name = "Qwen/Qwen2.5-32B-Instruct"
-    json_path = "output/financebench_text_results_qwen2.5-32B_with-facts.json"
+    # json_path = "output/financebench_text_results_qwen2.5-32B_with-facts.json"
+    json_path = "output/financebench_text_results_llama3.1-8B_with-facts.json"
     output_path = "output/financebench_facts_results_qwen2.5-32B.json"
     
     config = {

@@ -1,0 +1,14 @@
+{
+    "faithfulness": 0.6475138282,
+    "answer_relevancy": 0.2645771342,
+    "context_recall": 0.1122931442,
+    "semantic_similarity": 0.8032054653,
+    "context_entity_recall": 0.063051999,
+    "factual_correctness": 0.2952238806,
+    "context_precision": 0.0,
+    "rouge_score": 0.1096059119,
+    "total_output_token": 359161.0,
+    "total_input_token": 4008113.0,
+    "experiment": "eval_with_model_gpt4o_financebench_facts_results_llama3.2-3B.json",
+    "eval_model": "gpt4o"
+}
