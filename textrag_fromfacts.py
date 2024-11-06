@@ -67,15 +67,15 @@ def create_rag_workflow(config):
 if __name__ == "__main__":
     # model_name = "meta-llama/Llama-3.2-3B-Instruct"
     # json_path = "output/financebench_text_results_llama3.2-3B_with-facts.json"
-    # output_path = "financebench_facts_results_llama3.2-3B.json"
+    # output_path = "output/financebench_facts_results_llama3.2-3B.json"
     
     # model_name = "meta-llama/Llama-3.1-8B-Instruct"
-    # json_path = "financebench_text_results_llama3.1-8B_with-facts.json"
+    # json_path = "output/financebench_text_results_llama3.1-8B_with-facts.json"
     # output_path = "financebench_facts_results_llama3.1-8B.json"
     
     model_name = "Qwen/Qwen2.5-32B-Instruct"
-    json_path = "financebench_text_results_qwen2.5-32B_with-facts.json"
-    output_path = "financebench_facts_results_qwen2.5-32B.json"
+    json_path = "output/financebench_text_results_qwen2.5-32B_with-facts.json"
+    output_path = "output/financebench_facts_results_qwen2.5-32B.json"
     
     config = {
         "text_model": model_name,

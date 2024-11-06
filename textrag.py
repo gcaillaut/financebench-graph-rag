@@ -85,10 +85,10 @@ if __name__ == "__main__":
     # output_path = "output/financebench_text_results_llama3.2-3B.json"
     
     # model_name = "meta-llama/Llama-3.1-8B-Instruct"
-    # output_path = "financebench_text_results_llama3.1-8B.json"
+    # output_path = "output/financebench_text_results_llama3.1-8B.json"
     
     model_name = "Qwen/Qwen2.5-32B-Instruct"
-    output_path = "financebench_text_results_qwen2.5-32B.json"
+    output_path = "output/financebench_text_results_qwen2.5-32B.json"
     
     config = {
         "chroma_db_path": "./cache/chromadb",
