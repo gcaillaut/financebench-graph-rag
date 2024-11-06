@@ -82,14 +82,14 @@ def create_rag_workflow(config):
     return rag_workflow
 
 if __name__ == "__main__":
-    model_name = "meta-llama/Llama-3.2-3B-Instruct"
-    output_path = "output/financebench_neo4j_results_llama3.2-3B.json"
+    # model_name = "meta-llama/Llama-3.2-3B-Instruct"
+    # output_path = "output/financebench_neo4j_results_llama3.2-3B.json"
     
     # model_name = "meta-llama/Llama-3.1-8B-Instruct"
     # output_path = "financebench_neo4j_results_llama3.1-8B.json"
     
-    # model_name = "Qwen/Qwen2.5-32B-Instruct"
-    # output_path = "financebench_neo4j_results_qwen2.5-32B.json"
+    model_name = "Qwen/Qwen2.5-32B-Instruct"
+    output_path = "financebench_neo4j_results_qwen2.5-32B.json"
     
     config = {
         "chroma_db_path": "./cache/chromadb",

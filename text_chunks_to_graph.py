@@ -93,12 +93,14 @@ def create_knowledge_graph_workflow(config):
 
 XP_NAMES = [
     # "financebench_text_results_llama3.1-8B",
-    "financebench_text_results_llama3.2-3B",
+    # "financebench_text_results_llama3.2-3B",
+    "financebench_text_results_qwen2.5-32B",
 ]
 
 TEXT_MODELS = [
     # "meta-llama/Llama-3.1-8B-Instruct",
-    "meta-llama/Llama-3.2-3B-Instruct",
+    # "meta-llama/Llama-3.2-3B-Instruct",
+    "Qwen/Qwen2.5-32B-Instruct",
 ]
 
 for xp_name, txt_model in zip(XP_NAMES, TEXT_MODELS):
