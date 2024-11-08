@@ -72,12 +72,15 @@ if __name__ == "__main__":
 
         textrag_output_path = f"output/financebench_text_results_{xp}.json"
         factsrag_output_path = f"output/financebench_facts_results_{xp}.json"
+        neo4jrag_output_path = f"output/financebench_neo4j_results_{xp}.json"
             
         textrag_data = read_json(textrag_output_path)
         factsrag_data = read_json(factsrag_output_path)
+        neo4jrag_data = read_json(neo4jrag_output_path)
                 
         textrag_tokens = 0
         factsrag_tokens = 0
+        neo4jrag_tokens = 0
 
         for x in textrag_data:
             messages = make_textrag_prompt(x["question"], x["chunks"])
@@ -87,10 +90,15 @@ if __name__ == "__main__":
             messages = make_factsrag_prompt(x["question"], x["chunks"])
             factsrag_tokens += count_tokens(tokenizer, messages)
             
+        for x in neo4jrag_data:
+            messages = make_factsrag_prompt(x["question"], x["chunks"])
+            neo4jrag_tokens += count_tokens(tokenizer, messages)
+            
         output.append({
             "model": model,
             "facts": factsrag_tokens,
             "text": textrag_tokens,
+            "neo4j": neo4jrag_tokens,
         })
         
     with open("output/input_tokens_count.json", "wt", encoding="utf-8") as f:
