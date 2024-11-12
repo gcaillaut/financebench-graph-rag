@@ -2,6 +2,7 @@ from llmworkflow import (
     Workflow,
     TextVectorStore,
     ChatModel,
+    ApiModel,
     Chain,
     Function,
 )
@@ -49,7 +50,10 @@ def create_rag_workflow(config):
         config["top_k_results"],
     )
 
-    llm = ChatModel("chat_model", config["text_model"], config["max_new_tokens"])
+    if config["api"]:
+        llm = ApiModel("chat_model", config["text_model"], "http://localhost:8000/v1", "token", config["max_new_tokens"])
+    else:
+        llm = ChatModel("chat_model", config["text_model"], config["max_new_tokens"])
 
     def _make_prompt(query):
         passages = [
@@ -87,8 +91,11 @@ if __name__ == "__main__":
     # model_name = "meta-llama/Llama-3.1-8B-Instruct"
     # output_path = "output/financebench_text_results_llama3.1-8B.json"
     
-    model_name = "Qwen/Qwen2.5-32B-Instruct"
-    output_path = "output/financebench_text_results_qwen2.5-32B.json"
+    # model_name = "Qwen/Qwen2.5-32B-Instruct"
+    # output_path = "output/financebench_text_results_qwen2.5-32B.json"
+    
+    model_name = "Qwen/Qwen2-VL-72B-Instruct-GPTQ-Int8"
+    output_path = "output/financebench_text_results_qwen2-vl-72B.json"
     
     config = {
         "chroma_db_path": "./cache/chromadb",
@@ -97,6 +104,7 @@ if __name__ == "__main__":
         "top_k_results": 8,
         "text_model": model_name,
         "max_new_tokens": 2048,
+        "api": model_name == "Qwen/Qwen2-VL-72B-Instruct-GPTQ-Int8",
     }
 
     rag_workflow = create_rag_workflow(config)

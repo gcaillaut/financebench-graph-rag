@@ -1,6 +1,7 @@
 from llmworkflow import (
     Workflow,
     ChatModel,
+    ApiModel,
     Chain,
     Function,
 )
@@ -39,7 +40,10 @@ def extract_xml_tag(text, tag):
 def create_rag_workflow(config):
     rag_workflow = Workflow("Text RAG")
 
-    llm = ChatModel("chat_model", config["text_model"], config["max_new_tokens"])
+    if config["api"]:
+        llm = ApiModel("chat_model", config["text_model"], "http://localhost:8000/v1", "token", config["max_new_tokens"])
+    else:
+        llm = ChatModel("chat_model", config["text_model"], config["max_new_tokens"])
 
     def _make_prompt(query):
         return {
@@ -73,13 +77,18 @@ if __name__ == "__main__":
     # json_path = "output/financebench_text_results_llama3.1-8B_with-facts.json"
     # output_path = "financebench_facts_results_llama3.1-8B.json"
     
-    model_name = "Qwen/Qwen2.5-32B-Instruct"
-    json_path = "output/financebench_text_results_qwen2.5-32B_with-facts.json"
-    output_path = "output/financebench_facts_results_qwen2.5-32B.json"
+    # model_name = "Qwen/Qwen2.5-32B-Instruct"
+    # json_path = "output/financebench_text_results_qwen2.5-32B_with-facts.json"
+    # output_path = "output/financebench_facts_results_qwen2.5-32B.json"
+    
+    model_name = "Qwen/Qwen2-VL-72B-Instruct-GPTQ-Int8"
+    json_path = "output/financebench_text_results_qwen2-vl-72B_with-facts.json"
+    output_path = "output/financebench_facts_results_qwen2-vl-72B.json"
     
     config = {
         "text_model": model_name,
         "max_new_tokens": 2048,
+        "api": model_name == "Qwen/Qwen2-VL-72B-Instruct-GPTQ-Int8",
     }
 
     rag_workflow = create_rag_workflow(config)

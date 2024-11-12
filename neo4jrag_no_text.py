@@ -24,7 +24,7 @@ def get_base_history(passages):
         },
         {
             "role": "user",
-            "content": f"Below are text passages and triples from a knowledge graph, please read them. I will ask you questions afterward.\n\n{passages_text}",
+            "content": f"Below are triples from a knowledge graph, please read them. I will ask you questions afterward.\n\n{passages_text}",
         },
         {
             "role": "assistant",
@@ -57,7 +57,7 @@ def create_rag_workflow(config):
 
     def _make_prompt(query):
         passages = [
-            (x["content"] + "\n\n" + x["metadata"]["triples"]).strip()
+            x["metadata"]["triples"].strip()
             for x in text_vector_store.search(query["question"], where={"document": {"$eq": query["document"]}})
         ]
         
@@ -68,7 +68,10 @@ def create_rag_workflow(config):
         }
 
     def _ask_llm(data):
-        raw_answer = llm(data["question"], data["history"])
+        try:
+            raw_answer = llm(data["question"], data["history"])
+        except:
+            raw_answer = ""
         # raw_answer = "\n\n-------------\n\n".join(x["content"] for x in data["history"]) + "\n\n\n\n\n" + data["question"]
         return {
             "prediction": raw_answer,
@@ -87,16 +90,16 @@ def create_rag_workflow(config):
 
 if __name__ == "__main__":
     # model_name = "meta-llama/Llama-3.2-3B-Instruct"
-    # output_path = "output/financebench_neo4j_results_llama3.2-3B.json"
+    # output_path = "output/financebench_neo4j-no-text_results_llama3.2-3B.json"
     
     # model_name = "meta-llama/Llama-3.1-8B-Instruct"
-    # output_path = "output/financebench_neo4j_results_llama3.1-8B.json"
+    # output_path = "output/financebench_neo4j-no-text_results_llama3.1-8B.json"
     
-    # model_name = "Qwen/Qwen2.5-32B-Instruct"
-    # output_path = "output/financebench_neo4j_results_qwen2.5-32B.json"
+    model_name = "Qwen/Qwen2.5-32B-Instruct"
+    output_path = "output/financebench_neo4j-no-text_results_qwen2.5-32B.json"
     
-    model_name = "Qwen/Qwen2-VL-72B-Instruct-GPTQ-Int8"
-    output_path = "output/financebench_neo4j_results_qwen2-vl-72B.json"
+    # model_name = "Qwen/Qwen2-VL-72B-Instruct-GPTQ-Int8"
+    # output_path = "output/financebench_neo4j-no-text_results_qwen2-vl-72B.json"
     
     config = {
         "chroma_db_path": "./cache/chromadb",
@@ -123,7 +126,6 @@ if __name__ == "__main__":
     ):
         pdf_path = Path("data", "financebench", f"{dn}.pdf")
         if pdf_path.is_file():
-
             out = rag_workflow.run(
                 {"question": q, "document": dn}
             )

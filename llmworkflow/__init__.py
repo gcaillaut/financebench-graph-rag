@@ -1,5 +1,5 @@
 from .core import Workflow, Node, Function, Print, Chain
-from .models import TextModel, ChatModel
+from .models import TextModel, ChatModel, ApiModel
 from .vector_stores import TextVectorStore
 
 __all__ = [
@@ -9,6 +9,7 @@ __all__ = [
     "Chain",
     "TextModel",
     "ChatModel",
+    "ApiModel",
     "TextVectorStore",
     "Workflow",
 ]

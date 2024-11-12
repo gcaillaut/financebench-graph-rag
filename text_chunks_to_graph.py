@@ -1,6 +1,7 @@
 from llmworkflow import (
     Workflow,
     ChatModel,
+    ApiModel,
     Chain,
     Function,
 )
@@ -45,7 +46,10 @@ def augment_ner_prompt(base_prompt, facts, max_facts=8):
     
 def create_knowledge_graph_workflow(config):
     workflow = Workflow("KG extractor")
-    llm = ChatModel("LLM", config["text_model"], config["max_new_tokens"])
+    if config["api"]:
+        llm = ApiModel("chat_model", config["text_model"], "http://localhost:8000/v1", "token", config["max_new_tokens"])
+    else:
+        llm = ChatModel("chat_model", config["text_model"], config["max_new_tokens"])
     
     ner_prompt = "The end goal is to build a knowledge graph from the text. We will do it step by step. First, extract all named entities (persons, organizations, events, ...), dates (times and epochs too) and locations. Put them in a list."
     
@@ -94,13 +98,15 @@ def create_knowledge_graph_workflow(config):
 XP_NAMES = [
     # "financebench_text_results_llama3.1-8B",
     # "financebench_text_results_llama3.2-3B",
-    "financebench_text_results_qwen2.5-32B",
+    # "financebench_text_results_qwen2.5-32B",
+    "financebench_text_results_qwen2-vl-72B",
 ]
 
 TEXT_MODELS = [
     # "meta-llama/Llama-3.1-8B-Instruct",
     # "meta-llama/Llama-3.2-3B-Instruct",
-    "Qwen/Qwen2.5-32B-Instruct",
+    # "Qwen/Qwen2.5-32B-Instruct",
+    "Qwen/Qwen2-VL-72B-Instruct-GPTQ-Int8",
 ]
 
 for xp_name, txt_model in zip(XP_NAMES, TEXT_MODELS):
@@ -111,6 +117,7 @@ for xp_name, txt_model in zip(XP_NAMES, TEXT_MODELS):
     config = {
         "text_model": txt_model,
         "max_new_tokens": 2048,
+        "api": txt_model == "Qwen/Qwen2-VL-72B-Instruct-GPTQ-Int8",
     }
 
     kg_workflow = create_knowledge_graph_workflow(config)

@@ -1,6 +1,7 @@
-from typing import Union, List, Tuple, Dict
+from typing import Union, List, Tuple, Dict, Optional
 from .core import Node
 import itertools
+from openai import OpenAI
 import torch
 from transformers import (
     AutoTokenizer,
@@ -89,3 +90,34 @@ class ChatModel(TextModel):
         full_prompt = history + [{"role": "user", "content": prompt}]
         text = self.tokenizer.apply_chat_template(full_prompt, tokenize=False)[0]
         return super().get_logits(text)
+    
+    
+class ApiModel(Node):
+    def __init__(self, name: str, model_name: str, base_url: str, api_key: Optional[str] = "", max_tokens: int = 1024, temperature: float = 1.0, top_p: float = 1.0, max_image_size: int = 1200):
+        super().__init__(name)
+        self.model_name = model_name
+        self.max_tokens = max_tokens
+        self.temperature = temperature
+        self.top_p = top_p
+        self.max_image_size = max_image_size
+
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.client = OpenAI(base_url=base_url, api_key=api_key)
+
+    def get_tokenizer(self):
+        return self.tokenizer
+    
+    def __call__(self,
+                 prompts: str,
+                 histories: List[Dict[str, str]] = None,
+                 **kwargs) -> Union[str, List[str]]:
+        if histories is None:
+            histories = []
+            
+        messages = histories + [{"role": "user", "content": prompts}]
+        
+        completion = self.client.chat.completions.create(
+            messages=messages,
+            model=self.model_name,
+        )
+        return completion.choices[0].message.content
